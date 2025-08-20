@@ -1,7 +1,6 @@
 # 🖥️ SOC-in-a-Box (5 Virtual Machines Lab)
 
-Một project cá nhân nhỏ về **Security Operations Center (SOC)** gồm 5 thành phần chính: **Attacker, Firewall, IDS, Honeypot, và SIEM**.  
-Dự án được thực hiện nhằm có cái nhìn tổng quan hơn về sự đối lập **Red Team vs Blue Team** trong vận hành hệ thống.
+Một project cá nhân nhỏ về **Security Operations Center (SOC)** gồm 5 thành phần chính: **Attacker, Firewall, IDS, Honeypot, và SIEM**. Dự án được thực hiện nhằm có cái nhìn tổng quan hơn về sự đối lập **Red Team vs Blue Team** trong vận hành hệ thống.
 
 --- 
 
