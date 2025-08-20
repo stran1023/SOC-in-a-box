@@ -95,21 +95,20 @@ Thông qua dự án lab này, mình tích lũy được:
 ### 2. Import & cấu hình VM
 1. Tạo 5 VM theo specs trên.  
 2. Cấu hình mạng:  
-   - pfSense cung cấp DHCP cho LAN.  
+   - **pfSense**: cung cấp DHCP cho LAN.  
    - Các VM khác nối vào Internal Network.  
 
 ### 3. Cài đặt phần mềm
-- **pfSense**: enable Syslog → gửi về Wazuh.  
-- **Snort**: bật rules detect scan & brute force → gửi log về Wazuh (Wazuh agent).  
-- **Cowrie**: cấu hình output → gửi log về Wazuh (Wazuh agent).  
+- **Snort**: bật rules detect scan & brute force → gửi log về Wazuh (Snort → Wazuh Agent → Wazuh Manager).  
+- **Cowrie**: cấu hình output → gửi log về Wazuh (Cowrie → Wazuh Agent → Wazuh).  
 - **Wazuh**: cài All-in-One → nhận log từ các VM.  
 
 ### 4. Kiểm thử
-- Từ Kali: chạy `nmap -sn 192.168.1.0/24` và `nmap -p- 192.168.1.103`.  
+- Từ Kali: chạy nmap quét toàn bộ IP trong mạng LAN, quét toàn bộ port của Honeypot.  
 - Quan sát cảnh báo trong Snort + Wazuh dashboard.  
 - Brute force SSH Honeypot bằng Hydra:  
   ```
-  hydra -l root -P passwords.txt ssh://192.168.1.103
+  hydra -l root -P passwords.txt ssh://<ip-addr honeypot>
   ```
 - Kiểm tra log session trong Cowrie + alert trên Wazuh.
 
@@ -125,12 +124,12 @@ Thông qua dự án lab này, mình tích lũy được:
 
 ---
 
-## 📸 Demo (Screenshots) từng máy ảo
+## 📸 Screenshots giao diện của từng máy ảo
 
 ### 1. Tổng quan:
 ![Virtual Machines](picture/5vms.png)
 
-Tất cả các máy ảo nằm cùng trong 1 mạng LAN. Nhận IP từ DHCP của pfSense (đóng vai một Router)
+Tất cả các máy ảo được cấu hình nằm cùng 1 mạng LAN và nhận IP từ dịch vụ DHCP của pfSense (đóng vai trò như một Router)
 
 ![IP of platforms](picture/ip_devices.png)
 
@@ -138,39 +137,45 @@ Tất cả các máy ảo nằm cùng trong 1 mạng LAN. Nhận IP từ DHCP c�
 
 ### 2. Giao diện pfSense - được cài trên Ubuntu Server
 
+Giao diện CLI của pfSense:
 ![pfSense-cli](picture/sample/pfsense-sample.png)
 
+Giao diện Web-GUI của pfSense khi truy cập từ các máy trong mạng LAN.
 ![pfSense-gui](picture/sample/pfsense-gui.png)
 
 ![pfSense-gui](picture/sample/pfsense-sample1.png)
 
 ### 3. Giao diện Snort - được cài trên Ubuntu Server
 
+Giao diện CLI của Snort:
 ![Snort-cli](picture/sample/snort-sample.png)
 
 ### 4. Giao diện Cowrie - được cài trên Ubuntu Server
 
+Giao diện CLI của Cowrie:
 ![Cowrie-cli](picture/sample/cowrie-sample.png)
 
 ### 5. Giao diện Wazuh - được cài trên Ubuntu Desktop
 
+Giao diện Wazuh-Manager (Web GUI) của Wazuh:
 ![Wazuh-gui](picture/sample/wazuh-sample.png)
 
 ![Wazuh-gui](picture/sample/wazuh-sample1.png)
 
 ### 6. Giao diện Kali Linux
 
+Màn hình của kẻ tấn công 😎
 ![Kali-gui](picture/sample/kali-sample.png)
 
 ---
 
-## 📸 Demo (Screenshots) từng kịch bản tấn công + phòng thủ
+## 👟 Demo (Screenshots) từng kịch bản ở hai phía: tấn công & phòng thủ
 
-### Kịch bản 1: Kali chạy **nmap** quét mạng → **Snort** cảnh báo có quét mạng.
+### Kịch bản 1️⃣: Kali chạy **Nmap** quét mạng → **Snort** cảnh báo có quét mạng.
 
 ![Kich ban 1](picture/kich_ban_1/01.png)
 
-Ban đầu, Kali quét nmap với chế độ -sn. Snort không có cảnh báo vì chưa đủ độ nghi ngờ.
+Ban đầu, Kali quét nmap với chế độ **-sn**. Snort không có cảnh báo vì chưa đủ độ nghi ngờ.
 
 ![Kich ban 1](picture/kich_ban_1/02.png)
 
@@ -185,8 +190,8 @@ Vì mình đã cấu hình đẩy log từ Snort qua Wazuh nên có thể xem t�
 ![Kich ban 1](picture/kich_ban_1/05.png)
 
 
-## Kịch bản 2: Kali sử dụng Hydra để tấn công **SSH brute-force** → **Cowrie** ghi lại toàn bộ quá trình Hacker tấn công
-Sau khi đã xác định được các port mở trên Honeypot. Attacker tiến hành tấn công bruteforce trên port SSH.
+## Kịch bản 2️⃣: Kali sử dụng Hydra để tấn công **SSH brute-force** → **Cowrie** ghi lại toàn bộ quá trình Hacker tấn công
+Sau khi đã xác định được các port mở trên Honeypot. Attacker tiến hành tấn công **bruteforce** trên port SSH.
 
 ![Kich ban 2](picture/kich_ban_2/01.png)
 
